@@ -10,9 +10,9 @@ namespace CheckingAccountExample.Entities
 {
     public class CheckingAccount : BaseEntity
     {
-        public string AccountHolderName { get; set; }
-        public decimal Balance { get; set; }
-        public bool Overdrawn { get; set; }
+        public string AccountHolderName { get; private set; }
+        public decimal Balance { get; private set; }
+        public bool Overdrawn { get; private set; }
 
         private const decimal OverdraftPenalty = 25.00m;
         
@@ -50,17 +50,8 @@ namespace CheckingAccountExample.Entities
                 }
             );
         }
-        protected override IDictionary<string, Func<IEntityEvent<Guid>, Task<EntityEventResult>>> SetupHandlers()
-        {
-            return new Dictionary<string, Func<IEntityEvent<Guid>, Task<EntityEventResult>>>
-            {
-                {AccountCreatedEvent.EVENT_NAME, HandleAccountCreated},
-                {CheckCashedEvent.EVENT_NAME, HandleCheckCashed},
-                {DepositMadeEvent.EVENT_NAME, HandleDepositMade},
-                {AccountOverdrawnEvent.EVENT_NAME, HandleAccountOverdrawn}
-            };
-        }
 
+        [EntityEventHandler(typeof(AccountCreatedEvent))]
         protected virtual Task<EntityEventResult> HandleAccountOverdrawn(IEntityEvent<Guid> arg)
         {
             var aoe = (AccountOverdrawnEvent)arg;
@@ -70,6 +61,7 @@ namespace CheckingAccountExample.Entities
             return Task.FromResult(EntityEventResult.Applied);
         }
 
+        [EntityEventHandler(typeof(DepositMadeEvent))]
         private Task<EntityEventResult> HandleDepositMade(IEntityEvent<Guid> arg)
         {
             var dep = (DepositMadeEvent)arg;
@@ -78,6 +70,7 @@ namespace CheckingAccountExample.Entities
             return Task.FromResult(EntityEventResult.Applied);
         }
 
+        [EntityEventHandler(typeof(CheckCashedEvent))]
         private Task<EntityEventResult> HandleCheckCashed(IEntityEvent<Guid> arg)
         {
             var cce = (CheckCashedEvent)arg;
@@ -93,6 +86,7 @@ namespace CheckingAccountExample.Entities
             return Task.FromResult(EntityEventResult.Applied);
         }
 
+        [EntityEventHandler(typeof(AccountCreatedEvent))]
         private Task<EntityEventResult> HandleAccountCreated(IEntityEvent<Guid> ev)
         {
             var ac = (AccountCreatedEvent)ev;

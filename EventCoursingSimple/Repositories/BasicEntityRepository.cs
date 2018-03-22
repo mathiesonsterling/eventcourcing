@@ -17,7 +17,6 @@ namespace EventCoursingSimple.Repositories
     {
         private readonly IEventStore<Guid> _eventStore;
         private readonly IEventRetriever<Guid> _eventRetriever;
-        private readonly IEventReceiver<Guid> _eventReceiver;
         
         public BasicEntityRepository(IEventStore<Guid> eventStore, IEventRetriever<Guid> eventRetriever)
         {
@@ -39,7 +38,9 @@ namespace EventCoursingSimple.Repositories
             {
                 throw new InvalidOperationException("Entities must derive from BaseEntity to use this factory");
             }
-            entity.SetPipeline(_eventReceiver);
+            
+            //set the entity to send new events back to us
+            entity.SetPipeline(this);
             foreach (var ev in events)
             {
                 await entity.ApplyEvent(ev);

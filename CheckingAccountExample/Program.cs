@@ -15,26 +15,26 @@ namespace CheckingAccountExample
             var backing = new MemoryBasedEventStore();
             var repo = new BasicEntityRepository(backing, backing);
             CreateAndUseAnAccount(repo, repo).Wait();
-            Console.WriteLine("Hello World!");
         }
 
-        private static async Task CreateAndUseAnAccount(IEventReceiver<Guid> eventPipeline, IEntityRepository<Guid> entities)
+        private static async Task CreateAndUseAnAccount(IEventReceiver<Guid> eventPipeline,
+            IEntityRepository<Guid> entities)
         {
             //make an account
             var account = new CheckingAccount();
 
             await account.CreateAccount("Billy Joel", 25.00m);
 
+            Console.WriteLine($"Account now exists for {account.AccountHolderName}");
+
+
             await account.Deposit(15.0m);
 
             await account.WriteCheck("Bruce Springstein", 100.00m, "Billy Joel sucks");
-            
+
             //we should be overdrawn now
-                Console.WriteLine($"Account is now overdrawn = {account.Overdrawn}!");
-                Console.WriteLine($"Account balance with penalty is {account.Balance}");
-            
-            
-            //make another account, with same info, that doesn't overdraw
+            Console.WriteLine($"Account is now overdrawn = {account.Overdrawn}!");
+            Console.WriteLine($"Account balance with penalty is {account.Balance}");
         }
     }
 }
