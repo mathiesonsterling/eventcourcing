@@ -36,6 +36,13 @@ namespace ExampleCheckingAccount
             //we should be overdrawn now
             Console.WriteLine($"Account is now overdrawn = {account.Overdrawn}!");
             Console.WriteLine($"Account balance with penalty is {account.Balance}");
+            
+            Console.WriteLine("Let's try that again with a penalty-free account, reprocessing the past with new rules. . . ");
+
+            var newAccount = new CheckingAccountNoOverdraftCost {Id = account.Id};
+            await repo.RegisterEntity(newAccount);
+            Console.WriteLine($"Account balance with penalty (removed) is {newAccount.Balance} for the account of {newAccount.AccountHolderName}");
+            
         }
     }
 }

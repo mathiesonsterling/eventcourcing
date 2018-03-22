@@ -14,7 +14,7 @@ namespace EventCoursingSimple.Entities
     /// </summary>
     public abstract class BaseEntity : IEntity<Guid>
     {
-        public Guid Id { get; internal set; }
+        public Guid Id { get; set; }
 
         private IEventReceiver<Guid> _eventReceiver;
 

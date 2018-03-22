@@ -50,7 +50,7 @@ namespace ExampleCheckingAccount.Entities
         }
 
         [EntityEventHandler(typeof(AccountOverdrawnEvent))]
-        protected virtual Task<EntityEventResult> HandleAccountOverdrawn(IEntityEvent<Guid> arg)
+        private Task<EntityEventResult> HandleAccountOverdrawn(IEntityEvent<Guid> arg)
         {
             var aoe = (AccountOverdrawnEvent)arg;
             Overdrawn = true;
@@ -60,7 +60,7 @@ namespace ExampleCheckingAccount.Entities
         }
 
         [EntityEventHandler(typeof(DepositMadeEvent))]
-        private Task<EntityEventResult> HandleDepositMade(IEntityEvent<Guid> arg)
+        protected Task<EntityEventResult> HandleDepositMade(IEntityEvent<Guid> arg)
         {
             var dep = (DepositMadeEvent)arg;
             Balance += dep.Amount;
@@ -69,7 +69,7 @@ namespace ExampleCheckingAccount.Entities
         }
 
         [EntityEventHandler(typeof(CheckCashedEvent))]
-        private async Task<EntityEventResult> HandleCheckCashed(IEntityEvent<Guid> arg)
+        protected async Task<EntityEventResult> HandleCheckCashed(IEntityEvent<Guid> arg)
         {
             var cce = (CheckCashedEvent)arg;
             Balance -= cce.Amount;
@@ -85,7 +85,7 @@ namespace ExampleCheckingAccount.Entities
         }
 
         [EntityEventHandler(typeof(AccountCreatedEvent))]
-        private Task<EntityEventResult> HandleAccountCreated(IEntityEvent<Guid> ev)
+        protected Task<EntityEventResult> HandleAccountCreated(IEntityEvent<Guid> ev)
         {
             var ac = (AccountCreatedEvent)ev;
             AccountHolderName = ac.AccountHolderName;
