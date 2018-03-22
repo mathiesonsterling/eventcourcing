@@ -1,0 +1,50 @@
+﻿{
+  "version": "1.0.0",
+  "restore": {
+    "projectUniqueName": "/home/haywood/code/dotnet/eventcourcing/ExampleCheckingAccount/ExampleCheckingAccount.csproj",
+    "projectName": "ExampleCheckingAccount",
+    "projectPath": "/home/haywood/code/dotnet/eventcourcing/ExampleCheckingAccount/ExampleCheckingAccount.csproj",
+    "outputPath": "/home/haywood/code/dotnet/eventcourcing/ExampleCheckingAccount/obj/",
+    "projectStyle": "PackageReference",
+    "fallbackFolders": [
+      "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+    ],
+    "originalTargetFrameworks": [
+      "netcoreapp2.0"
+    ],
+    "frameworks": {
+      "netcoreapp2.0": {
+        "projectReferences": {
+          "/home/haywood/code/dotnet/eventcourcing/EventCoursingSimple/EventCoursingSimple.csproj": {
+            "projectPath": "/home/haywood/code/dotnet/eventcourcing/EventCoursingSimple/EventCoursingSimple.csproj"
+          },
+          "/home/haywood/code/dotnet/eventcourcing/EventCoursing/EventCoursing.csproj": {
+            "projectPath": "/home/haywood/code/dotnet/eventcourcing/EventCoursing/EventCoursing.csproj"
+          }
+        }
+      }
+    },
+    "warningProperties": {
+      "warnAsError": [
+        "NU1605"
+      ]
+    }
+  },
+  "frameworks": {
+    "netcoreapp2.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "suppressParent": "All",
+          "target": "Package",
+          "version": "[2.0.0, )",
+          "autoReferenced": true
+        }
+      },
+      "imports": [
+        "net461"
+      ],
+      "assetTargetFallback": true,
+      "warn": true
+    }
+  }
+}

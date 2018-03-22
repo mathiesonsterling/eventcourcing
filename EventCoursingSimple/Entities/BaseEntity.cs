@@ -31,14 +31,28 @@ namespace EventCoursingSimple.Entities
         {
             //get the methods that have our attribute, and the same entity event as us
             //more than one is an error, and we throw
-            var method = GetType().GetMethods()
+
+            var methods = GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
+
+            var methodsAndAtts = methods
                 .Select(m =>
                     new Tuple<MethodInfo, EntityEventHandlerAttribute>(m,
-                        m.GetCustomAttribute<EntityEventHandlerAttribute>()))
+                        m.GetCustomAttribute<EntityEventHandlerAttribute>()));
+
+            var filtered = methodsAndAtts
                 .Where(t => t.Item2 != null)
                 .Where(t => t.Item2.EventType == ev.GetType())
                 .Select(t => t.Item1)
-                .Single();
+                .ToList();
+
+            if (filtered.Count > 1)
+            {
+                var methodNames = filtered.Select(f => f.Name);
+                var methodNameJoin = string.Join(", ", methodNames);
+                throw new InvalidOperationException($"More than one method is attempting to handle an event.  Methods: {methodNameJoin}");
+            }
+
+            var method = filtered.FirstOrDefault();
 
             if (method == null)
             {
@@ -48,7 +62,7 @@ namespace EventCoursingSimple.Entities
             var param = new object[]{ev};
             var res = method.Invoke(this, param);
 
-            return Task.FromResult((EntityEventResult) res);
+            return (Task<EntityEventResult>)res;
         }
     }
 }

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using CheckingAccountExample.Entities.Events;
 using EventCoursing.Entities;
-using EventCoursing.Services;
 using EventCoursingSimple.Entities;
+using ExampleCheckingAccount.Entities.Events;
 
-namespace CheckingAccountExample.Entities
+namespace ExampleCheckingAccount.Entities
 {
     public class CheckingAccount : BaseEntity
     {
@@ -51,7 +49,7 @@ namespace CheckingAccountExample.Entities
             );
         }
 
-        [EntityEventHandler(typeof(AccountCreatedEvent))]
+        [EntityEventHandler(typeof(AccountOverdrawnEvent))]
         protected virtual Task<EntityEventResult> HandleAccountOverdrawn(IEntityEvent<Guid> arg)
         {
             var aoe = (AccountOverdrawnEvent)arg;

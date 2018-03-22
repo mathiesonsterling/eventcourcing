@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EventCoursing.Entities;
@@ -24,29 +25,43 @@ namespace EventCoursingSimple.Repositories
             _eventRetriever = eventRetriever;
         }
 
-        public async Task<TEntityType> GetEntity<TEntityType>(Guid entityId, bool allowSnapshots = true) 
+        public Task<TEntityType> GetEntity<TEntityType>(Guid entityId, bool allowSnapshots = true) 
             where TEntityType : class, IEntity<Guid>, new()
         {
+
+            var entity = new TEntityType();
+
+            return RegisterEntity(entity, allowSnapshots);
+        }
+
+        public async Task<TEntityType> RegisterEntity<TEntityType>(TEntityType entity, bool allowSnapshots = true) where TEntityType : IEntity<Guid>
+        {
             //get all events for our entity
-            var events = await _eventRetriever.GetStreamForEntity(entityId);
+            IEnumerable<IEntityEvent<Guid>> events = null;
+            if (entity.Id != Guid.Empty)
+            {
+                events = await _eventRetriever.GetStreamForEntity(entity.Id);
 
-            events = events.OrderBy(e => e.Timestamp);
+                events = events.OrderBy(e => e.Timestamp);
+            }
 
-            var entity = new TEntityType() as BaseEntity;
-
-            if (entity == null)
+            var realEnt = entity as BaseEntity;
+            if (realEnt == null)
             {
                 throw new InvalidOperationException("Entities must derive from BaseEntity to use this factory");
             }
             
             //set the entity to send new events back to us
-            entity.SetPipeline(this);
-            foreach (var ev in events)
+            realEnt.SetPipeline(this);
+            if (events != null)
             {
-                await entity.ApplyEvent(ev);
+                foreach (var ev in events)
+                {
+                    await entity.ApplyEvent(ev);
+                }
             }
 
-            return entity as TEntityType;
+            return entity;
         }
 
         public async Task<EntityEventResult> AddEvent<TEntityType>(IEntityEvent<Guid> ev) where TEntityType : class, IEntity<Guid>, new()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using EventCoursing.Entities;
 
@@ -19,5 +20,15 @@ namespace EventCoursing.Repositories
         /// <returns></returns>
         Task<TEntityType> GetEntity<TEntityType>(TIdentifierType entityId, bool allowSnapshots = true)
             where TEntityType : class, IEntity<TIdentifierType>, new();
+
+        /// <summary>
+        /// Take an instance of an entity, register it and hydrate it
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="allowSnapshots"></param>
+        /// <typeparam name="TEntityType">The type of IEntity that we're working with</typeparam>
+        /// <returns></returns>
+        Task<TEntityType> RegisterEntity<TEntityType>(TEntityType entity, bool allowSnapshots = true)
+            where TEntityType : IEntity<TIdentifierType>;
     }
 }

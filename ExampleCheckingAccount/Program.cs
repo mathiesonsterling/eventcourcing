@@ -4,8 +4,9 @@ using EventCoursing.Repositories;
 using EventCoursing.Services;
 using EventCoursingSimple.Repositories;
 using EventCoursingSimple.Services;
+using ExampleCheckingAccount.Entities;
 
-namespace CheckingAccountExample
+namespace ExampleCheckingAccount
 {
     class Program
     {
@@ -13,15 +14,16 @@ namespace CheckingAccountExample
         {
             var backing = new MemoryBasedEventStore();
             var repo = new BasicEntityRepository(backing, backing);
-            CreateAndUseAnAccount(repo, repo).Wait();
+            CreateAndUseAnAccount(repo).Wait();
         }
 
-        private static async Task CreateAndUseAnAccount(IEventReceiver<Guid> eventPipeline,
-            IEntityRepository<Guid> entities)
+        private static async Task CreateAndUseAnAccount(IEntityRepository<Guid> repo)
         {
             //make an account
             var account = new CheckingAccount();
 
+            await repo.RegisterEntity(account);
+            
             await account.CreateAccount("Billy Joel", 25.00m);
 
             Console.WriteLine($"Account now exists for {account.AccountHolderName}");

@@ -11,8 +11,7 @@ namespace EventCoursingSimple.Entities
             EntityId = entityId;
             Timestamp = DateTime.UtcNow;
         }
-        public Guid EntityId { get; protected set; }
+        public Guid EntityId { get; private set; }
         public DateTime Timestamp { get; }
-        public abstract string Name { get; }
     }
 }

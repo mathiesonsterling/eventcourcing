@@ -1,15 +1,13 @@
 ﻿using System;
 using EventCoursingSimple.Entities;
 
-namespace CheckingAccountExample.Entities.Events
+namespace ExampleCheckingAccount.Entities.Events
 {
     /// <summary>
     /// Signals that an account was overdrawn
     /// </summary>
     public class AccountOverdrawnEvent : BaseEntityEvent
     {
-        public const string EVENT_NAME = "AccountOverdrawn";
-        public override string Name => EVENT_NAME;
 
         public AccountOverdrawnEvent(Guid entityId) : base(entityId)
         {
