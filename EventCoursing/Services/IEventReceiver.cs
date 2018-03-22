@@ -4,7 +4,7 @@ using EventCoursing.Entities;
 namespace EventCoursing.Services
 {
     /// <summary>
-    /// Represents any item which can retrieve and then process events to keep the system in a consistent state
+    /// Pipeline to recieve events then send them to the correct entity.  Can be a repository, or a message bus
     /// </summary>
     public interface IEventReceiver<TIdentifierType>
     {
@@ -14,6 +14,6 @@ namespace EventCoursing.Services
         /// <param name="ev"></param>
         /// <returns></returns>
         Task<EntityEventResult> AddEvent<TEntityType>(IEntityEvent<TIdentifierType> ev)
-            where TEntityType : class, IEntity<TIdentifierType>, new();
+            where TEntityType : IEntity<TIdentifierType>;
     }
 }

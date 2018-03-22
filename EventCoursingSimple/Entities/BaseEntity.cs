@@ -14,17 +14,24 @@ namespace EventCoursingSimple.Entities
     /// </summary>
     public abstract class BaseEntity : IEntity<Guid>
     {
-        public Guid Id { get; protected set; }
+        public Guid Id { get; internal set; }
 
-        protected IEventReceiver<Guid> EventPipeline { get; private set; }
+        private IEventReceiver<Guid> _eventReceiver;
 
-        /// <summary>
-        /// We're doing method injection here - don't like it, but with new() generics have no choice
-        /// </summary>
-        /// <param name="pipeline"></param>
-        internal void SetPipeline(IEventReceiver<Guid> pipeline)
+        internal void SetReceiver(IEventReceiver<Guid> receiver)
         {
-            EventPipeline = pipeline;
+            _eventReceiver = receiver;
+        }
+        
+        /// <summary>
+        /// Allows entities to send events to other entities internally
+        /// </summary>
+        /// <param name="ev"></param>
+        /// <typeparam name="TDestinationEntity"></typeparam>
+        /// <returns></returns>
+        protected Task<EntityEventResult> SendEvent<TDestinationEntity>(IEntityEvent<Guid> ev) where TDestinationEntity: IEntity<Guid>
+        {
+            return _eventReceiver.AddEvent<TDestinationEntity>(ev);
         }
 
         public Task<EntityEventResult> ApplyEvent(IEntityEvent<Guid> ev)

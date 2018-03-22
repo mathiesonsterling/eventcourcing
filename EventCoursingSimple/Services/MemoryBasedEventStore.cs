@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -23,7 +24,12 @@ namespace EventCoursingSimple.Services
 
         public Task<IEnumerable<IEntityEvent<Guid>>> GetStreamForEntity(Guid entityId, long? startId = null)
         {
-            return Task.FromResult(_events[entityId].AsEnumerable());
+            if (_events.ContainsKey(entityId))
+            {
+                return Task.FromResult(_events[entityId].AsEnumerable());
+            }
+
+            return Task.FromResult(new List<IEntityEvent<Guid>>().AsEnumerable());
         }
 
         public Task<IEnumerable<IEntityEvent<Guid>>> GetEvents(DateTime start, DateTime end)

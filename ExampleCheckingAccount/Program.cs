@@ -20,19 +20,19 @@ namespace ExampleCheckingAccount
         private static async Task CreateAndUseAnAccount(IEntityRepository<Guid> repo)
         {
             //make an account
-            var account = new CheckingAccount();
+            var account = await repo.CreateEntity<CheckingAccount>();
 
-            await repo.RegisterEntity(account);
             
-            await account.CreateAccount("Billy Joel", 25.00m);
+            await account.CreateAccount("Pete Seeger", 25.00m);
 
-            Console.WriteLine($"Account now exists for {account.AccountHolderName}");
+            Console.WriteLine($"Account now exists for {account.AccountHolderName} with balance of ${account.Balance}");
 
 
             await account.Deposit(15.0m);
-
+            Console.WriteLine($"Deposited $15, balance is now {account.Balance}");
+            
             await account.WriteCheck("Bruce Springstein", 100.00m, "Billy Joel sucks");
-
+            Console.WriteLine($"Wrote check for $100, balance is now ${account.Balance}");
             //we should be overdrawn now
             Console.WriteLine($"Account is now overdrawn = {account.Overdrawn}!");
             Console.WriteLine($"Account balance with penalty is {account.Balance}");

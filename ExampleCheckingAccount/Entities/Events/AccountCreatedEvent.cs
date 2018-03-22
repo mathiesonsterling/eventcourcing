@@ -5,7 +5,7 @@ namespace ExampleCheckingAccount.Entities.Events
 {
     public class AccountCreatedEvent : BaseEntityEvent
     {
-        public AccountCreatedEvent() : base(Guid.NewGuid())
+        public AccountCreatedEvent(Guid entityId) : base(entityId)
         {
         }
         public string AccountHolderName { get; set; }

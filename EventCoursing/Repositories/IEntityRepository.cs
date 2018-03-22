@@ -12,7 +12,16 @@ namespace EventCoursing.Repositories
     public interface IEntityRepository<TIdentifierType>
     {
         /// <summary>
-        /// Get all events for a stream, apply them to 
+        /// Create a new instance of an entity type that can recieve events
+        /// </summary>
+        /// <param name="allowSnapshots"></param>
+        /// <typeparam name="TEntityType"></typeparam>
+        /// <returns></returns>
+        Task<TEntityType> CreateEntity<TEntityType>(bool allowSnapshots = true)
+            where TEntityType : class, IEntity<TIdentifierType>, new();
+        
+        /// <summary>
+        /// Get an existing entity by its ID and return it with its data
         /// </summary>
         /// <param name="entityId"></param>
         /// <param name="allowSnapshots"></param>

@@ -16,14 +16,14 @@ namespace ExampleCheckingAccount.Entities
         
         public Task CreateAccount(string name, decimal openingBalance)
         {
-            var ev = new AccountCreatedEvent
+            var ev = new AccountCreatedEvent(Id)
             {
                 AccountHolderName = name,
                 EmployeeOpening = "Bruce Springsteen",
                 OpeningBalance = openingBalance
             };
 
-            return EventPipeline.AddEvent<CheckingAccount>(ev);
+            return SendEvent<CheckingAccount>(ev);
         }
 
         public Task Deposit(decimal amount)
@@ -33,12 +33,12 @@ namespace ExampleCheckingAccount.Entities
                 Amount = amount
             };
 
-            return EventPipeline.AddEvent<CheckingAccount>(ev);
+            return SendEvent<CheckingAccount>(ev);
         }
 
         public Task WriteCheck(string recipient, decimal amount, string memo)
         {
-            return EventPipeline.AddEvent<CheckingAccount>(
+            return SendEvent<CheckingAccount>(
                 new CheckCashedEvent(Id)
                 {
                     Amount = amount,
@@ -69,7 +69,7 @@ namespace ExampleCheckingAccount.Entities
         }
 
         [EntityEventHandler(typeof(CheckCashedEvent))]
-        private Task<EntityEventResult> HandleCheckCashed(IEntityEvent<Guid> arg)
+        private async Task<EntityEventResult> HandleCheckCashed(IEntityEvent<Guid> arg)
         {
             var cce = (CheckCashedEvent)arg;
             Balance -= cce.Amount;
@@ -78,10 +78,10 @@ namespace ExampleCheckingAccount.Entities
             {
                 //we overdrafted!  we put out another event to let the system handle this
                 var overdraftEvent = new AccountOverdrawnEvent(Id);
-                EventPipeline.AddEvent<CheckingAccount>(overdraftEvent);
+                await SendEvent<CheckingAccount>(overdraftEvent);
             }
             
-            return Task.FromResult(EntityEventResult.Applied);
+            return EntityEventResult.Applied;
         }
 
         [EntityEventHandler(typeof(AccountCreatedEvent))]
@@ -90,7 +90,6 @@ namespace ExampleCheckingAccount.Entities
             var ac = (AccountCreatedEvent)ev;
             AccountHolderName = ac.AccountHolderName;
             Balance = ac.OpeningBalance;
-            Id = ac.EntityId;
             return Task.FromResult(EntityEventResult.Applied);
         }
     }
