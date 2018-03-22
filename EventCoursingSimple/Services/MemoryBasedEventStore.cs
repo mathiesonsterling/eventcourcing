@@ -14,8 +14,13 @@ namespace EventCoursingSimple.Services
     public class MemoryBasedEventStore : IEventRetriever<Guid>, IEventStore<Guid>
     {
         private readonly Dictionary<Guid, IList<IEntityEvent<Guid>>> _events;
-        private long currentEventPos;
-        
+        private DateTime? _lastEventTime;
+
+        public MemoryBasedEventStore()
+        {
+            _events = new Dictionary<Guid, IList<IEntityEvent<Guid>>>();
+        }
+
         public Task<IEnumerable<IEntityEvent<Guid>>> GetStreamForEntity(Guid entityId, long? startId = null)
         {
             return Task.FromResult(_events[entityId].AsEnumerable());
@@ -24,12 +29,6 @@ namespace EventCoursingSimple.Services
         public Task<IEnumerable<IEntityEvent<Guid>>> GetEvents(DateTime start, DateTime end)
         {
             var events = AllEvents.Where(e => e.Timestamp >= start && e.Timestamp <= end);
-            return Task.FromResult(events);
-        }
-
-        public Task<IEnumerable<IEntityEvent<Guid>>> GetEvents(long startPos, long endPos)
-        {
-            var events = AllEvents.Where(e => e.EventOrderingId >= startPos && e.EventOrderingId <= endPos);
             return Task.FromResult(events);
         }
 
@@ -43,21 +42,23 @@ namespace EventCoursingSimple.Services
             {
                 _events[ev.EntityId].Add(ev);
             }
+
+            _lastEventTime = ev.Timestamp;
+            return Task.FromResult(true);
         }
 
-        public Task<long> GetNextEventId()
+        public DateTime GetLastEventTime()
         {
-            currentEventPos = currentEventPos + 1;
-            return Task.FromResult(currentEventPos);
+            return _lastEventTime??DateTime.MinValue;
         }
 
         private IEnumerable<IEntityEvent<Guid>> AllEvents
         {
             get
             {
-                foreach (var key in _events)
+                foreach (var list in _events.Values)
                 {
-                    foreach (var ev in _events[key])
+                    foreach (var ev in list)
                     {
                         yield return ev;
                     }

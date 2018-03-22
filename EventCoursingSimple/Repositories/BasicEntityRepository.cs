@@ -1,53 +1,62 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EventCoursing.Entities;
+using EventCoursing.Repositories;
 using EventCoursing.Services;
-using System.Linq;
-using EventCoursing.Factories;
+using EventCoursingSimple.Entities;
 
-namespace EventCoursing.Repositories.Implementation
+namespace EventCoursingSimple.Repositories
 {
     /// <summary>
-    /// A basic entity repository that uses Guids for an ID
+    /// A basic entity repository that uses Guids for an ID.  Also allows us to submit events
+    /// (for single system programs this is fine, for distributed systems we'll need a separate message bus, etc)
     /// TODO enable real caching, snapshots
     /// </summary>
-    public class BasicEntityRepository : IEntityRepository<Guid>
+    public class BasicEntityRepository : IEntityRepository<Guid>, IEventReceiver<Guid>
     {
         private readonly IEventStore<Guid> _eventStore;
         private readonly IEventRetriever<Guid> _eventRetriever;
-        private readonly IEntityFactory<Guid> _entityFactory;
+        private readonly IEventReceiver<Guid> _eventReceiver;
         
-        public BasicEntityRepository(IEventStore<Guid> eventStore, IEventRetriever<Guid> eventRetriever, IEntityFactory<Guid> entityFactory)
+        public BasicEntityRepository(IEventStore<Guid> eventStore, IEventRetriever<Guid> eventRetriever)
         {
             _eventStore = eventStore;
             _eventRetriever = eventRetriever;
-            _entityFactory = entityFactory;
         }
 
-        public Task AddEvent(IEntityEvent<Guid> ev)
-        {
-            return _eventStore.StoreEvent(ev);
-        }
-
-        public async Task<TEntityType> GetEntity<TEntityType>(Guid entityId, bool allowSnapshots = true) where TEntityType : IEntity<Guid>
+        public async Task<TEntityType> GetEntity<TEntityType>(Guid entityId, bool allowSnapshots = true) 
+            where TEntityType : class, IEntity<Guid>, new()
         {
             //get all events for our entity
             var events = await _eventRetriever.GetStreamForEntity(entityId);
 
-            events = events.OrderBy(e => e.EventOrderingId).ThenBy(e => e.Timestamp);
+            events = events.OrderBy(e => e.Timestamp);
 
-            var baseEntity = await _entityFactory.CreateEntity<TEntityType>(entityId);
+            var entity = new TEntityType() as BaseEntity;
+
+            if (entity == null)
+            {
+                throw new InvalidOperationException("Entities must derive from BaseEntity to use this factory");
+            }
+            entity.SetPipeline(_eventReceiver);
             foreach (var ev in events)
             {
-                await baseEntity.ApplyEvent(ev);
+                await entity.ApplyEvent(ev);
             }
 
-            return baseEntity;
+            return entity as TEntityType;
         }
 
-        public Task<long> GetNextEventId()
+        public async Task<EntityEventResult> AddEvent<TEntityType>(IEntityEvent<Guid> ev) where TEntityType : class, IEntity<Guid>, new()
         {
-            return _eventStore.GetNextEventId();
+            var entity = await GetEntity<TEntityType>(ev.EntityId);
+            
+            var retrieve = entity.ApplyEvent(ev);
+
+            await _eventStore.StoreEvent(ev);
+
+            return await retrieve;
         }
     }
 }

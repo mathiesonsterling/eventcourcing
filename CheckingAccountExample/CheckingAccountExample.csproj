@@ -4,8 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\EventCoursing\EventCoursing.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Factories" />
+    <ProjectReference Include="..\EventCoursingSimple\EventCoursingSimple.csproj" />
   </ItemGroup>
 </Project>
