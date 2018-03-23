@@ -12,16 +12,22 @@ namespace EventCoursingSimple.Entities
     /// <summary>
     /// Base entity that we can use to easily construct our Domain specific things, and handle events internally
     /// </summary>
-    public abstract class BaseEntity : IEntity<Guid>
+    public abstract class BaseEntity : IRepositoryManagedEntity<Guid>
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
 
         private IEventReceiver<Guid> _eventReceiver;
 
-        internal void SetReceiver(IEventReceiver<Guid> receiver)
+        public void SetId(Guid id)
+        {
+            Id = id;
+        }
+
+        void IRepositoryManagedEntity<Guid>.SetReceiver(IEventReceiver<Guid> receiver)
         {
             _eventReceiver = receiver;
         }
+
         
         /// <summary>
         /// Allows entities to send events to other entities internally

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using EventCoursing.Entities;
 using EventCoursing.Repositories;
 using EventCoursing.Services;
 using EventCoursingSimple.Repositories;
@@ -22,7 +23,6 @@ namespace ExampleCheckingAccount
             //make an account
             var account = await repo.CreateEntity<CheckingAccount>();
 
-            
             await account.CreateAccount("Pete Seeger", 25.00m);
 
             Console.WriteLine($"Account now exists for {account.AccountHolderName} with balance of ${account.Balance}");
@@ -39,7 +39,10 @@ namespace ExampleCheckingAccount
             
             Console.WriteLine("Let's try that again with a penalty-free account, reprocessing the past with new rules. . . ");
 
-            var newAccount = new CheckingAccountNoOverdraftCost {Id = account.Id};
+            var newAccount = new CheckingAccountNoOverdraftCost();
+            var downcast = (IRepositoryManagedEntity<Guid>) newAccount;
+            downcast.SetId(account.Id);
+            
             await repo.RegisterEntity(newAccount);
             Console.WriteLine($"Account balance with penalty (removed) is {newAccount.Balance} for the account of {newAccount.AccountHolderName}");
             

@@ -40,7 +40,7 @@ namespace EventCoursingSimple.Repositories
 
             var entity = new TEntityType();
             var realEnt = DowncastEnity(entity);
-            realEnt.Id = entityId;
+            realEnt.SetId(entityId);
 
             return RegisterEntity(entity, allowSnapshots);
         }
@@ -57,7 +57,6 @@ namespace EventCoursingSimple.Repositories
             }
 
             var realEnt = DowncastEnity(entity);
-
             //set the entity to send new events back to us
             realEnt.SetReceiver(this);
             
@@ -76,10 +75,9 @@ namespace EventCoursingSimple.Repositories
             return entity;
         }
 
-        private static BaseEntity DowncastEnity<TEntityType>(TEntityType entity) where TEntityType : IEntity<Guid>
+        private static IRepositoryManagedEntity<Guid> DowncastEnity<TEntityType>(TEntityType entity) where TEntityType : IEntity<Guid>
         {
-            var realEnt = entity as BaseEntity;
-            if (realEnt == null)
+            if (!(entity is IRepositoryManagedEntity<Guid> realEnt))
             {
                 throw new InvalidOperationException("Entities must derive from BaseEntity to use this factory");
             }

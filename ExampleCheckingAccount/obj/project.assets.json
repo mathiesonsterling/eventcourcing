@@ -699,38 +699,44 @@
     ]
   },
   "packageFolders": {
-    "/home/haywood/.nuget/packages/": {},
-    "/usr/share/dotnet/sdk/NuGetFallbackFolder": {}
+    "C:\\Users\\gsterling\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/haywood/code/dotnet/eventcourcing/ExampleCheckingAccount/ExampleCheckingAccount.csproj",
+      "projectUniqueName": "C:\\code\\EventCoursing\\ExampleCheckingAccount\\ExampleCheckingAccount.csproj",
       "projectName": "ExampleCheckingAccount",
-      "projectPath": "/home/haywood/code/dotnet/eventcourcing/ExampleCheckingAccount/ExampleCheckingAccount.csproj",
-      "packagesPath": "/home/haywood/.nuget/packages/",
-      "outputPath": "/home/haywood/code/dotnet/eventcourcing/ExampleCheckingAccount/obj/",
+      "projectPath": "C:\\code\\EventCoursing\\ExampleCheckingAccount\\ExampleCheckingAccount.csproj",
+      "packagesPath": "C:\\Users\\gsterling\\.nuget\\packages\\",
+      "outputPath": "C:\\code\\EventCoursing\\ExampleCheckingAccount\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback",
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "/home/haywood/.config/NuGet/NuGet.Config"
+        "C:\\Users\\gsterling\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "http://proget.aws.cloud.apprenda.local/nuget/dev/": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "/home/haywood/code/dotnet/eventcourcing/EventCoursingSimple/EventCoursingSimple.csproj": {
-              "projectPath": "/home/haywood/code/dotnet/eventcourcing/EventCoursingSimple/EventCoursingSimple.csproj"
+            "C:\\code\\EventCoursing\\EventCoursingSimple\\EventCoursingSimple.csproj": {
+              "projectPath": "C:\\code\\EventCoursing\\EventCoursingSimple\\EventCoursingSimple.csproj"
             },
-            "/home/haywood/code/dotnet/eventcourcing/EventCoursing/EventCoursing.csproj": {
-              "projectPath": "/home/haywood/code/dotnet/eventcourcing/EventCoursing/EventCoursing.csproj"
+            "C:\\code\\EventCoursing\\EventCoursing\\EventCoursing.csproj": {
+              "projectPath": "C:\\code\\EventCoursing\\EventCoursing\\EventCoursing.csproj"
             }
           }
         }

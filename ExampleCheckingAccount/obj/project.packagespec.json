@@ -1,13 +1,14 @@
 ﻿{
   "version": "1.0.0",
   "restore": {
-    "projectUniqueName": "/home/haywood/code/dotnet/eventcourcing/ExampleCheckingAccount/ExampleCheckingAccount.csproj",
+    "projectUniqueName": "C:\\code\\EventCoursing\\ExampleCheckingAccount\\ExampleCheckingAccount.csproj",
     "projectName": "ExampleCheckingAccount",
-    "projectPath": "/home/haywood/code/dotnet/eventcourcing/ExampleCheckingAccount/ExampleCheckingAccount.csproj",
-    "outputPath": "/home/haywood/code/dotnet/eventcourcing/ExampleCheckingAccount/obj/",
+    "projectPath": "C:\\code\\EventCoursing\\ExampleCheckingAccount\\ExampleCheckingAccount.csproj",
+    "outputPath": "C:\\code\\EventCoursing\\ExampleCheckingAccount\\obj\\",
     "projectStyle": "PackageReference",
     "fallbackFolders": [
-      "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+      "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback",
+      "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
     ],
     "originalTargetFrameworks": [
       "netcoreapp2.0"
@@ -15,11 +16,11 @@
     "frameworks": {
       "netcoreapp2.0": {
         "projectReferences": {
-          "/home/haywood/code/dotnet/eventcourcing/EventCoursingSimple/EventCoursingSimple.csproj": {
-            "projectPath": "/home/haywood/code/dotnet/eventcourcing/EventCoursingSimple/EventCoursingSimple.csproj"
+          "C:\\code\\EventCoursing\\EventCoursingSimple\\EventCoursingSimple.csproj": {
+            "projectPath": "C:\\code\\EventCoursing\\EventCoursingSimple\\EventCoursingSimple.csproj"
           },
-          "/home/haywood/code/dotnet/eventcourcing/EventCoursing/EventCoursing.csproj": {
-            "projectPath": "/home/haywood/code/dotnet/eventcourcing/EventCoursing/EventCoursing.csproj"
+          "C:\\code\\EventCoursing\\EventCoursing\\EventCoursing.csproj": {
+            "projectPath": "C:\\code\\EventCoursing\\EventCoursing\\EventCoursing.csproj"
           }
         }
       }
